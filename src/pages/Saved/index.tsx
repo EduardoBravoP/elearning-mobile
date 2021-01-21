@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 
 import {Image} from 'react-native';
 
-import mathImg from '../../assets/Math.png';
-
 import {
   Container,
   Header,
@@ -18,18 +16,25 @@ import logoImg from '../../assets/Logotipo.png';
 import Input from '../../components/Input';
 import Course from '../../components/Course';
 import Footer from '../../components/Footer';
-import api from '../../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home: React.FC = () => {
-  const [courses, setCourses] = useState([]);
+  const [favoriteCourses, setFavoriteCourses] = useState([]);
 
   useEffect(() => {
-    async function loadCategories() {
-      api.get('courses').then((response) => setCourses(response.data));
+    async function getFavoriteCourses() {
+      const stringFavoriteCourses = await AsyncStorage.getItem(
+        '@elearning:favorites',
+      );
+
+      if (stringFavoriteCourses !== null) {
+        setFavoriteCourses(JSON.parse(stringFavoriteCourses));
+        console.log(favoriteCourses);
+      }
     }
 
-    loadCategories();
-  }, []);
+    getFavoriteCourses();
+  }, [favoriteCourses]);
 
   return (
     <Container>
@@ -40,21 +45,25 @@ const Home: React.FC = () => {
 
       <Content>
         <ContentHeader>
-          <Title>Categorias</Title>
-          <HeaderText>{courses ? courses.length : '0'} cursos</HeaderText>
+          <Title>Cursos Salvos</Title>
         </ContentHeader>
         <ScrollView
           ListEmptyComponent={() => (
-            <HeaderText>Não há cursos no momento</HeaderText>
+            <HeaderText>Não há cursos salvos no momento</HeaderText>
           )}
           keyExtractor={(item) => item.id}
           numColumns={2}
-          data={courses}
+          data={favoriteCourses}
           renderItem={({item}) => (
-            <Course id={item.id} name={item.name} imageUrl={item.image} />
+            <Course
+              id={item.id}
+              name={item.name}
+              imageUrl={item.image}
+              hasDeleteIcon
+            />
           )}
         />
-        <Footer isActive />
+        <Footer isActive={false} />
       </Content>
     </Container>
   );
