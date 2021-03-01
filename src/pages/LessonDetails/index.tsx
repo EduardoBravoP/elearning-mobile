@@ -20,6 +20,7 @@ import {
   ButtonArea,
   Button,
   ButtonContainer,
+  ButtonDescription,
 } from './styles';
 
 import logoImg from '../../assets/Logotipo.png';
@@ -148,16 +149,16 @@ const LessonDetails: React.FC = () => {
           <Button white>
             <ButtonContainer>
               <Icon name="arrow-left" color="#FF6680" size={20} />
-              <Description style={{color: '#FF6680', marginLeft: 12}}>
+              <ButtonDescription style={{color: '#FF6680', marginLeft: 12}}>
                 Aula anterior
-              </Description>
+              </ButtonDescription>
             </ButtonContainer>
           </Button>
           <Button>
             <ButtonContainer>
-              <Description style={{color: '#fff', marginRight: 12}}>
+              <ButtonDescription style={{color: '#fff', marginRight: 12}}>
                 Próxima aula
-              </Description>
+              </ButtonDescription>
               <Icon name="arrow-right" color="#fff" size={20} />
             </ButtonContainer>
           </Button>

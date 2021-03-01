@@ -62,14 +62,14 @@ export const Description = styled.Text`
   font-size: 15px;
   line-height: 25px;
   color: #6c6c80;
+  height: 150px;
 `;
 
 export const ButtonArea = styled.View`
-  flex: 1;
+  height: 20%;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  margin-bottom: 10px;
 `;
 
 export const Button = styled.TouchableOpacity<IButtonProps>`
@@ -92,4 +92,11 @@ export const ButtonContainer = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+`;
+
+export const ButtonDescription = styled.Text`
+  font-family: 'Roboto-Regular';
+  font-size: 15px;
+  line-height: 25px;
+  color: #6c6c80;
 `;
