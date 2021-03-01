@@ -52,9 +52,9 @@ const Course: React.FC<IProps> = ({
     setModalVisible(false);
   }, []);
 
-  const handleYesSubmit = useCallback(() => {
+  const handleYesSubmit = useCallback(async () => {
+    await removeFavoriteInAsyncStorage({id, image: imageUrl, name});
     setModalVisible(false);
-    removeFavoriteInAsyncStorage({id, image: imageUrl, name});
   }, [id, imageUrl, name]);
 
   return (

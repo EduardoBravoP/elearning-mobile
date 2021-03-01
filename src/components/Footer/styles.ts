@@ -14,7 +14,6 @@ export const Container = styled.View`
   bottom: ${125 + getStatusBarHeight()}px;
   height: 73px;
   width: 100%;
-  padding: 0 68px;
   background-color: #fff;
   flex-direction: row;
 
@@ -38,9 +37,14 @@ export const ActiveBar = styled.View<IProps>`
 export const ButtonContainer = styled.View`
   flex-direction: row;
   align-items: center;
+  height: 100%;
+  flex: 1;
+  padding: 0 68px;
 `;
 
-export const Button = styled.TouchableWithoutFeedback``;
+export const Button = styled.TouchableWithoutFeedback`
+  height: 100%;
+`;
 
 export const TextButton = styled.Text<IProps>`
   font-family: 'Roboto-Medium';

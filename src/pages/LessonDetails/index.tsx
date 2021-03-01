@@ -1,5 +1,5 @@
-import {useRoute} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {Image} from 'react-native';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
@@ -23,20 +23,89 @@ import {
 } from './styles';
 
 import logoImg from '../../assets/Logotipo.png';
+import {
+  IFavoriteProps,
+  removeFavoriteInAsyncStorage,
+  saveFavoriteInAsyncStorage,
+} from '../../utils/AsyncStorageFavorites';
+import api from '../../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IRouteParams {
   id: string;
+  course_id: string;
+}
+
+interface ILesson {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  video_id: string;
 }
 
 const LessonDetails: React.FC = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const routeParams = route.params as IRouteParams;
 
-  const [isFavorite, setIsFavorite] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [course, setCourse] = useState<IFavoriteProps>({} as IFavoriteProps);
+  const [thisLesson, setThisLesson] = useState<ILesson>({} as ILesson);
 
-  const handleGoBack = useCallback(() => {}, []);
+  useEffect(() => {
+    api.get('courses').then((response) => {
+      const courses: IFavoriteProps[] = response.data;
 
-  const handleFavorite = useCallback(() => {}, []);
+      const thisCourse = courses.filter(
+        (item: IFavoriteProps) => item.id === routeParams.course_id,
+      )[0];
+
+      setCourse(thisCourse);
+    });
+
+    api.get(`courses/${routeParams.course_id}/lessons`).then((response) => {
+      const lessons: ILesson[] = response.data;
+
+      const lesson = lessons.filter((item) => item.id === routeParams.id)[0];
+      setThisLesson(lesson);
+    });
+  }, [routeParams.course_id, routeParams.id]);
+
+  useEffect(() => {
+    AsyncStorage.getItem('@elearning:favorites').then((courses) => {
+      if (!courses) {
+        setIsFavorite(false);
+        return;
+      }
+
+      const parsedCourses: Array<IFavoriteProps> = JSON.parse(courses);
+
+      const favoriteCourse = parsedCourses.filter(
+        (item) => item.id === routeParams.course_id,
+      )[0];
+
+      if (!favoriteCourse) {
+        setIsFavorite(false);
+      } else {
+        setIsFavorite(true);
+      }
+    });
+  }, [routeParams.course_id]);
+
+  const handleGoBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
+  const handleFavorite = useCallback(() => {
+    if (isFavorite) {
+      removeFavoriteInAsyncStorage(course);
+      setIsFavorite(false);
+    } else {
+      saveFavoriteInAsyncStorage(course);
+      setIsFavorite(true);
+    }
+  }, [course, isFavorite]);
 
   return (
     <Container>
@@ -57,10 +126,10 @@ const LessonDetails: React.FC = () => {
       <Content>
         <VideoStyles
           apiKey="AIzaSyCUlsCzQa51PnJXWY0T74R4gaq4zAmtgUY"
-          videoId="hS5Fm96UOhA"
+          videoId={thisLesson.video_id}
         />
         <TextArea>
-          <Title>Introdução à matemática</Title>
+          <Title>{thisLesson.name}</Title>
           <TextWrapper>
             <Duration>Aula 01</Duration>
             <DurationView>
@@ -70,14 +139,10 @@ const LessonDetails: React.FC = () => {
                 name="clock"
                 color="#a0a0b2"
               />
-              <Duration>5 min</Duration>
+              <Duration>{Math.floor(thisLesson.duration / 60)} min</Duration>
             </DurationView>
           </TextWrapper>
-          <Description>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus
-            condimentum gravida. Aenean condimentum vehicula sapien, eleifend
-            metus congue vel.
-          </Description>
+          <Description>{thisLesson.description}</Description>
         </TextArea>
         <ButtonArea>
           <Button white>

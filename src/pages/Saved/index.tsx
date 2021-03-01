@@ -17,24 +17,31 @@ import Input from '../../components/Input';
 import Course from '../../components/Course';
 import Footer from '../../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
-const Home: React.FC = () => {
+const Saved: React.FC = () => {
   const [favoriteCourses, setFavoriteCourses] = useState([]);
 
+  const navigation = useNavigation();
+
   useEffect(() => {
-    async function getFavoriteCourses() {
-      const stringFavoriteCourses = await AsyncStorage.getItem(
-        '@elearning:favorites',
-      );
+    const unsubscribe = navigation.addListener('focus', () => {
+      async function getFavoriteCourses() {
+        const stringFavoriteCourses = await AsyncStorage.getItem(
+          '@elearning:favorites',
+        );
 
-      if (stringFavoriteCourses !== null) {
-        setFavoriteCourses(JSON.parse(stringFavoriteCourses));
-        console.log(favoriteCourses);
+        if (stringFavoriteCourses !== null) {
+          const parsedFavoriteCourses = JSON.parse(stringFavoriteCourses);
+          setFavoriteCourses(parsedFavoriteCourses);
+        }
       }
-    }
 
-    getFavoriteCourses();
-  }, [favoriteCourses]);
+      getFavoriteCourses();
+    });
+
+    return unsubscribe;
+  }, [navigation, favoriteCourses]);
 
   return (
     <Container>
@@ -69,4 +76,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Saved;

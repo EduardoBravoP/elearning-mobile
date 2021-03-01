@@ -31,40 +31,40 @@ const Footer: React.FC<IProps> = ({isActive}: IProps) => {
       {isActive ? (
         <>
           <ActiveBar />
-          <ButtonContainer>
-            <Icon name="home" size={15} color="#FF6680" />
+          <Button>
+            <ButtonContainer>
+              <Icon name="home" size={15} color="#FF6680" />
 
-            <Button>
               <TextButton isFocused>Home</TextButton>
-            </Button>
-          </ButtonContainer>
+            </ButtonContainer>
+          </Button>
 
-          <ButtonContainer>
-            <Icon name="heart" size={15} color="#C4C4D1" />
+          <Button onPress={handleChangeFocus}>
+            <ButtonContainer>
+              <Icon name="heart" size={15} color="#C4C4D1" />
 
-            <Button onPress={handleChangeFocus}>
               <TextButton>Salvos</TextButton>
-            </Button>
-          </ButtonContainer>
+            </ButtonContainer>
+          </Button>
         </>
       ) : (
         <>
           <ActiveBar onTheRight={true} />
-          <ButtonContainer>
-            <Icon name="home" size={15} color="#C4C4D1" />
+          <Button onPress={handleChangeFocus}>
+            <ButtonContainer>
+              <Icon name="home" size={15} color="#C4C4D1" />
 
-            <Button onPress={handleChangeFocus}>
               <TextButton>Home</TextButton>
-            </Button>
-          </ButtonContainer>
+            </ButtonContainer>
+          </Button>
 
-          <ButtonContainer>
-            <Icon name="heart" size={15} color="#FF6680" />
+          <Button>
+            <ButtonContainer>
+              <Icon name="heart" size={15} color="#FF6680" />
 
-            <Button>
               <TextButton isFocused>Salvos</TextButton>
-            </Button>
-          </ButtonContainer>
+            </ButtonContainer>
+          </Button>
         </>
       )}
     </Container>

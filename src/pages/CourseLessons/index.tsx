@@ -47,13 +47,6 @@ const Lessons: React.FC = () => {
   const [lessons, setLessons] = useState([]);
   const [course, setCourse] = useState<ICourse>({} as ICourse);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [lessonsInCourse, setLessonsInCourse] = useState([]);
-
-  useEffect(() => {
-    api.get(`courses/${routeParams.id}/lessons`).then((response) => {
-      setLessonsInCourse(response.data);
-    });
-  }, [routeParams.id]);
 
   useEffect(() => {
     api.get(`courses/${routeParams.id}/lessons`).then((response) => {
@@ -92,6 +85,31 @@ const Lessons: React.FC = () => {
     });
   }, [routeParams.id]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      AsyncStorage.getItem('@elearning:favorites').then((courses) => {
+        if (!courses) {
+          setIsFavorite(false);
+          return;
+        }
+
+        const parsedCourses: Array<IFavoriteProps> = JSON.parse(courses);
+
+        const favoriteCourse = parsedCourses.filter(
+          (item) => item.id === routeParams.id,
+        )[0];
+
+        if (!favoriteCourse) {
+          setIsFavorite(false);
+        } else {
+          setIsFavorite(true);
+        }
+      });
+    });
+
+    return unsubscribe;
+  }, [navigation, routeParams.id]);
+
   const handleGoBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
@@ -125,7 +143,7 @@ const Lessons: React.FC = () => {
       <Content>
         <ContentHeader>
           <Title>{course.name}</Title>
-          <Description>{lessonsInCourse.length} aulas</Description>
+          <Description>{lessons.length} aulas</Description>
         </ContentHeader>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -134,7 +152,9 @@ const Lessons: React.FC = () => {
           )}
           keyExtractor={(item) => item.id}
           data={lessons}
-          renderItem={({item}) => <Lesson id={item.id} />}
+          renderItem={({item}) => (
+            <Lesson course_id={routeParams.id} id={item.id} lesson={item} />
+          )}
         />
       </Content>
     </Container>

@@ -18,16 +18,24 @@ import {
   CompletedText,
 } from './styles';
 
-interface IProps {
-  id: string;
+interface ILessonProps {
+  name: string;
+  duration: number;
+  description: string;
 }
 
-const Lesson: React.FC<IProps> = ({id}: IProps) => {
+interface IProps {
+  id: string;
+  course_id: string;
+  lesson: ILessonProps;
+}
+
+const Lesson: React.FC<IProps> = ({id, course_id, lesson}: IProps) => {
   const navigation = useNavigation();
 
   const handleGoToLessonDetails = useCallback(() => {
-    navigation.navigate('LessonDetails', {id});
-  }, [navigation, id]);
+    navigation.navigate('LessonDetails', {id, course_id});
+  }, [navigation, id, course_id]);
 
   return (
     <Container>
@@ -36,7 +44,7 @@ const Lesson: React.FC<IProps> = ({id}: IProps) => {
       </ImageView>
       <Button onPress={handleGoToLessonDetails}>
         <ButtonContainer>
-          <Title>Introdução à teoria matemática</Title>
+          <Title>{lesson.name}</Title>
           <Description>
             <Text>Aula 02</Text>
             <DurationView>
@@ -46,7 +54,7 @@ const Lesson: React.FC<IProps> = ({id}: IProps) => {
                 color="#C4C4D1"
                 style={{marginRight: 5}}
               />
-              <Text>5min</Text>
+              <Text>{Math.floor(lesson.duration / 60)} min</Text>
             </DurationView>
           </Description>
           <CompletedView>
