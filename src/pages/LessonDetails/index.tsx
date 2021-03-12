@@ -126,7 +126,7 @@ const LessonDetails: React.FC = () => {
 
       <Content>
         <VideoStyles
-          apiKey="AIzaSyCUlsCzQa51PnJXWY0T74R4gaq4zAmtgUY"
+          apiKey={process.env.API_KEY}
           videoId={thisLesson.video_id}
         />
         <TextArea>
