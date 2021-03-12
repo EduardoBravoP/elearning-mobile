@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 
 import {Image} from 'react-native';
 
-import mathImg from '../../assets/Math.png';
-
 import {
   Container,
   Header,
@@ -22,20 +20,30 @@ import api from '../../api';
 
 const Home: React.FC = () => {
   const [courses, setCourses] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     async function loadCategories() {
-      api.get('courses').then((response) => setCourses(response.data));
+      if (!inputValue) {
+        api.get('courses').then((response) => setCourses(response.data));
+        return;
+      }
+
+      const response = await api.get('courses', {
+        params: {search: inputValue},
+      });
+
+      setCourses(response.data);
     }
 
     loadCategories();
-  }, []);
+  }, [inputValue]);
 
   return (
     <Container>
       <Header>
         <Image source={logoImg} />
-        <Input />
+        <Input value={inputValue} onChangeText={setInputValue} />
       </Header>
 
       <Content>

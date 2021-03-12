@@ -1,25 +1,17 @@
-import {FlatList, TextInput} from 'react-native';
+import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-  height: 100%;
+  height: 107%;
   background-color: #6548a3;
 `;
 
 export const Header = styled.View`
   padding: 0 24px;
-  height: 150px;
+  height: 100px;
   display: flex;
   justify-content: space-around;
-  align-items: flex-start;
-`;
-
-export const SearchTextInput = styled(TextInput)`
-  height: 56px;
-  width: 100%;
-  border-radius: 100px;
-  background-color: #fff;
-  margin-bottom: 20px;
+  align-items: center;
 `;
 
 export const Content = styled.View`

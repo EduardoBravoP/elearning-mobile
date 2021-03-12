@@ -14,8 +14,7 @@ import {
   Text,
   Description,
   DurationView,
-  CompletedView,
-  CompletedText,
+  ArrowIconContainer,
 } from './styles';
 
 interface ILessonProps {
@@ -57,9 +56,9 @@ const Lesson: React.FC<IProps> = ({id, course_id, lesson}: IProps) => {
               <Text>{Math.floor(lesson.duration / 60)} min</Text>
             </DurationView>
           </Description>
-          <CompletedView>
-            <CompletedText>Completo!</CompletedText>
-          </CompletedView>
+          <ArrowIconContainer>
+            <Icon name="arrow-right" size={15} color="#fff" />
+          </ArrowIconContainer>
         </ButtonContainer>
       </Button>
     </Container>

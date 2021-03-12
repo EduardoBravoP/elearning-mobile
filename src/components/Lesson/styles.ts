@@ -1,5 +1,7 @@
 import styled from 'styled-components/native';
 
+import Icon from 'react-native-vector-icons/Feather';
+
 export const Container = styled.View`
   align-self: flex-end;
 `;
@@ -56,21 +58,16 @@ export const DurationView = styled.View`
   flex-direction: row;
 `;
 
-export const CompletedView = styled.View`
+export const ArrowIconContainer = styled.View`
   position: absolute;
-  bottom: 0;
   right: 0;
-  width: 63px;
-  height: 16px;
+  bottom: 0;
   background-color: #61c5bd;
-  border-radius: 12px;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
 
+  display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-export const CompletedText = styled.Text`
-  font-family: 'Roboto-Medium';
-  font-size: 10px;
-  color: #fff;
 `;

@@ -8,7 +8,6 @@ export interface IFavoriteProps {
 }
 
 export async function saveFavoriteInAsyncStorage(data: IFavoriteProps) {
-  //ver se algum valor ja esta setado com a chave @elearning:favorites
   const value = await AsyncStorage.getItem('@elearning:favorites');
 
   if (value) {

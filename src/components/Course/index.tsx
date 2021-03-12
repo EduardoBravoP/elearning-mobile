@@ -55,7 +55,9 @@ const Course: React.FC<IProps> = ({
   const handleYesSubmit = useCallback(async () => {
     await removeFavoriteInAsyncStorage({id, image: imageUrl, name});
     setModalVisible(false);
-  }, [id, imageUrl, name]);
+    navigation.navigate('Home');
+    navigation.navigate('Saved');
+  }, [id, imageUrl, name, navigation]);
 
   return (
     <>
@@ -64,7 +66,7 @@ const Course: React.FC<IProps> = ({
           <ModalCenterView>
             <ModalIcon size={48} color="#FF6680" name="trash" />
             <ModalDescription>
-              Quer excluir suas aulas de matemática?
+              Quer excluir suas aulas de {name}?
             </ModalDescription>
             <ModalButtonArea>
               <ModalNoButton onPress={handleNoSubmit}>

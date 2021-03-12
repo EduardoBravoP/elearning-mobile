@@ -13,14 +13,19 @@ import {
 } from './styles';
 
 import logoImg from '../../assets/Logotipo.png';
-import Input from '../../components/Input';
 import Course from '../../components/Course';
 import Footer from '../../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 
+interface ICourse {
+  id: string;
+  image: string;
+  name: string;
+}
+
 const Saved: React.FC = () => {
-  const [favoriteCourses, setFavoriteCourses] = useState([]);
+  const [favoriteCourses, setFavoriteCourses] = useState<ICourse[]>([]);
 
   const navigation = useNavigation();
 
@@ -32,11 +37,13 @@ const Saved: React.FC = () => {
         );
 
         if (stringFavoriteCourses !== null) {
-          const parsedFavoriteCourses = JSON.parse(stringFavoriteCourses);
+          const parsedFavoriteCourses: ICourse[] = JSON.parse(
+            stringFavoriteCourses,
+          );
+
           setFavoriteCourses(parsedFavoriteCourses);
         }
       }
-
       getFavoriteCourses();
     });
 
@@ -47,7 +54,6 @@ const Saved: React.FC = () => {
     <Container>
       <Header>
         <Image source={logoImg} />
-        <Input />
       </Header>
 
       <Content>
