@@ -1,12 +1,17 @@
+/* eslint-disable prettier/prettier */
 import styled, {css} from 'styled-components/native';
 
 import Youtube from 'react-native-youtube';
+
+import {Dimensions} from 'react-native';
 
 interface IButtonProps {
   white?: boolean;
 }
 
-export const Container = styled.View``;
+export const Container = styled.View`
+  height: ${Dimensions.get('window').height}px;
+`;
 
 export const Header = styled.View`
   padding: 0 24px;
@@ -37,6 +42,7 @@ export const Title = styled.Text`
   line-height: 35px;
   color: #3d3d4c;
   margin: 24px 50px 17px 0;
+  height: 70px;
 `;
 
 export const TextWrapper = styled.View`
@@ -66,10 +72,11 @@ export const Description = styled.Text`
 `;
 
 export const ButtonArea = styled.View`
-  height: 20%;
+  height: 200px;
   flex-direction: row;
   align-items: flex-end;
   justify-content: center;
+  padding-bottom: 70px;
 `;
 
 export const Button = styled.TouchableOpacity<IButtonProps>`

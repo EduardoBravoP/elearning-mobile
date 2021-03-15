@@ -65,7 +65,7 @@ export const ModalCenterView = styled.View`
   height: 242px;
   background: #fff;
   border-radius: 20px;
-  padding: 35px 30px 35px 40px;
+  padding: 30px 0;
 
   justify-content: space-between;
   align-items: center;

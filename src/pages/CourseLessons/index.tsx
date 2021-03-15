@@ -27,6 +27,7 @@ import {
   ScrollView,
   EmptyDescription,
 } from './styles';
+import {useCourses} from '../../context/CourseContext';
 
 interface IRouteParams {
   id: string;
@@ -41,16 +42,20 @@ interface ICourse {
 const Lessons: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const {setLessons, lessons} = useCourses();
 
   const routeParams = route.params as IRouteParams;
 
-  const [lessons, setLessons] = useState([]);
   const [course, setCourse] = useState<ICourse>({} as ICourse);
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     api.get(`courses/${routeParams.id}/lessons`).then((response) => {
-      setLessons(response.data);
+      if (response.data) {
+        setLessons(response.data);
+      } else {
+        setLessons([]);
+      }
     });
 
     api.get('courses').then((response) => {
@@ -62,7 +67,7 @@ const Lessons: React.FC = () => {
 
       setCourse(thisCourse);
     });
-  }, [routeParams.id]);
+  }, [routeParams.id, setLessons]);
 
   useEffect(() => {
     AsyncStorage.getItem('@elearning:favorites').then((courses) => {
@@ -140,23 +145,30 @@ const Lessons: React.FC = () => {
         </TouchableNativeFeedback>
       </Header>
 
-      <Content>
-        <ContentHeader>
-          <Title>{course.name}</Title>
-          <Description>{lessons.length} aulas</Description>
-        </ContentHeader>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => (
-            <EmptyDescription>Não há aulas no momento</EmptyDescription>
-          )}
-          keyExtractor={(item) => item.id}
-          data={lessons}
-          renderItem={({item}) => (
-            <Lesson course_id={routeParams.id} id={item.id} lesson={item} />
-          )}
-        />
-      </Content>
+      {lessons && (
+        <Content>
+          <ContentHeader>
+            <Title>{course.name}</Title>
+            <Description>{lessons.length} aulas</Description>
+          </ContentHeader>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <EmptyDescription>Não há aulas no momento</EmptyDescription>
+            )}
+            keyExtractor={(item) => item.id}
+            data={lessons}
+            renderItem={({item, index}) => (
+              <Lesson
+                course_id={routeParams.id}
+                id={item.id}
+                lesson={item}
+                index={index}
+              />
+            )}
+          />
+        </Content>
+      )}
     </Container>
   );
 };

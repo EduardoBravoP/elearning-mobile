@@ -27,14 +27,19 @@ interface IProps {
   id: string;
   course_id: string;
   lesson: ILessonProps;
+  index: number;
 }
 
-const Lesson: React.FC<IProps> = ({id, course_id, lesson}: IProps) => {
+const Lesson: React.FC<IProps> = ({id, course_id, lesson, index}: IProps) => {
   const navigation = useNavigation();
 
   const handleGoToLessonDetails = useCallback(() => {
-    navigation.navigate('LessonDetails', {id, course_id});
-  }, [navigation, id, course_id]);
+    navigation.navigate('LessonDetails', {
+      id,
+      course_id,
+      lessonNumber: index + 1,
+    });
+  }, [navigation, id, course_id, index]);
 
   return (
     <Container>
@@ -45,7 +50,7 @@ const Lesson: React.FC<IProps> = ({id, course_id, lesson}: IProps) => {
         <ButtonContainer>
           <Title>{lesson.name}</Title>
           <Description>
-            <Text>Aula 02</Text>
+            <Text>Aula {index + 1}</Text>
             <DurationView>
               <Icon
                 name="clock"

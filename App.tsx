@@ -14,12 +14,15 @@ import React from 'react';
 import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './src/routes';
+import {CourseProvider} from './src/context/CourseContext';
 
 const App = () => {
   return (
     <NavigationContainer>
       <StatusBar barStyle="dark-content" backgroundColor="#6548A3" />
-      <Routes />
+      <CourseProvider>
+        <Routes />
+      </CourseProvider>
     </NavigationContainer>
   );
 };

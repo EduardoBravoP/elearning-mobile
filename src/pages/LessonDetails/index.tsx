@@ -31,10 +31,12 @@ import {
 } from '../../utils/AsyncStorageFavorites';
 import api from '../../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useCourses} from '../../context/CourseContext';
 
 interface IRouteParams {
   id: string;
   course_id: string;
+  lessonNumber: number;
 }
 
 interface ILesson {
@@ -49,6 +51,7 @@ const LessonDetails: React.FC = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const routeParams = route.params as IRouteParams;
+  const {lessons} = useCourses();
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [course, setCourse] = useState<IFavoriteProps>({} as IFavoriteProps);
@@ -65,13 +68,9 @@ const LessonDetails: React.FC = () => {
       setCourse(thisCourse);
     });
 
-    api.get(`courses/${routeParams.course_id}/lessons`).then((response) => {
-      const lessons: ILesson[] = response.data;
-
-      const lesson = lessons.filter((item) => item.id === routeParams.id)[0];
-      setThisLesson(lesson);
-    });
-  }, [routeParams.course_id, routeParams.id]);
+    const lesson = lessons.filter((item) => item.id === routeParams.id)[0];
+    setThisLesson(lesson);
+  }, [routeParams.course_id, routeParams.id, lessons]);
 
   useEffect(() => {
     AsyncStorage.getItem('@elearning:favorites').then((courses) => {
@@ -108,6 +107,41 @@ const LessonDetails: React.FC = () => {
     }
   }, [course, isFavorite]);
 
+  const handleGoPreviousLesson = useCallback(() => {
+    const indexOfThisLesson = lessons.findIndex(
+      (lesson) => lesson.id === thisLesson.id,
+    );
+
+    if (indexOfThisLesson !== 0) {
+      const {id} = lessons[indexOfThisLesson - 1];
+      const course_id = routeParams.course_id;
+
+      navigation.goBack();
+      navigation.navigate('LessonDetails', {
+        id,
+        course_id,
+        lessonNumber: indexOfThisLesson,
+      });
+    }
+  }, [lessons, thisLesson.id, routeParams.course_id, navigation]);
+
+  const handleGoNextLesson = useCallback(() => {
+    const indexOfThisLesson = lessons.findIndex(
+      (lesson) => lesson.id === thisLesson.id,
+    );
+
+    if (indexOfThisLesson !== lessons.length - 1) {
+      const {id} = lessons[indexOfThisLesson + 1];
+      const course_id = routeParams.course_id;
+
+      navigation.goBack();
+      navigation.navigate('LessonDetails', {
+        id,
+        course_id,
+        lessonNumber: indexOfThisLesson + 2,
+      });
+    }
+  }, [lessons, thisLesson.id, routeParams.course_id, navigation]);
   return (
     <Container>
       <Header>
@@ -132,7 +166,7 @@ const LessonDetails: React.FC = () => {
         <TextArea>
           <Title>{thisLesson.name}</Title>
           <TextWrapper>
-            <Duration>Aula 01</Duration>
+            <Duration>Aula {routeParams.lessonNumber}</Duration>
             <DurationView>
               <Icon
                 size={16}
@@ -146,7 +180,7 @@ const LessonDetails: React.FC = () => {
           <Description>{thisLesson.description}</Description>
         </TextArea>
         <ButtonArea>
-          <Button white>
+          <Button white onPress={handleGoPreviousLesson}>
             <ButtonContainer>
               <Icon name="arrow-left" color="#FF6680" size={20} />
               <ButtonDescription style={{color: '#FF6680', marginLeft: 12}}>
@@ -154,7 +188,7 @@ const LessonDetails: React.FC = () => {
               </ButtonDescription>
             </ButtonContainer>
           </Button>
-          <Button>
+          <Button onPress={handleGoNextLesson}>
             <ButtonContainer>
               <ButtonDescription style={{color: '#fff', marginRight: 12}}>
                 Próxima aula
