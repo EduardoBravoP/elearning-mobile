@@ -1,6 +1,6 @@
 # E-Learning 📚
-<center><img src="github/banner.png" alt="banner"></center>
-<p>Search for a large variety of courses, watch the classes, and mark your favorite one.</p>
+<div style="text-align:center"><img src="github/banner.png" alt="banner"></div>
+<p align="center">Search for a large variety of courses, watch the classes, and mark your favorite one.</p>
 
 <hr>
 
